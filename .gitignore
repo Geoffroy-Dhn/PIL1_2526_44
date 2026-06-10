@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.so
+.Python
+venv/
+env/
+.env
+*.egg-info/
+.vscode/
+.idea/
+*.swp
+*.db
+*.sqlite
+frontend/assets/uploads/*
+*.log
+config.local.py
+*.pem
