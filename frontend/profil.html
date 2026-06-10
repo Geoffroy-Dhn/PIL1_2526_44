@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - IFRI_MentorLink</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .nav-links a {
+            color: #555;
+            text-decoration: none;
+            margin-left: 25px;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        
+        .profile-card {
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .profile-card:hover { transform: translateY(-5px); }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .avatar {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .avatar:hover { transform: scale(1.05); }
+        
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar span { font-size: 48px; }
+        
+        .name { font-size: 28px; font-weight: bold; color: white; }
+        .email { color: rgba(255,255,255,0.9); margin-top: 5px; }
+        
+        .content { padding: 30px; }
+        
+        .section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            background: white;
+        }
+        
+        .section h3 { margin-bottom: 15px; color: #333; display: flex; align-items: center; gap: 10px; }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        
+        .info-item:hover {
+            transform: translateX(5px);
+            background: #e9ecef;
+        }
+        
+        .info-icon { font-size: 28px; }
+        .info-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .info-value { font-size: 15px; font-weight: 500; color: #333; margin-top: 5px; }
+        
+        .competence-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        
+        .badge {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .badge-fort {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-fort:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(60, 118, 61, 0.3);
+        }
+        
+        .badge-faible {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .badge-faible:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(114, 28, 36, 0.3);
+        }
+        
+        .dispo-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        
+        .dispo-tag {
+            background: #e9ecef;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 13px;
+            color: #495057;
+            transition: all 0.3s;
+        }
+        
+        .dispo-tag:hover {
+            transform: scale(1.05);
+            background: #dee2e6;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+        
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-sm { padding: 5px 10px; font-size: 12px; margin-left: 5px; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; color: #555; }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #667eea; }
+        textarea { resize: vertical; min-height: 100px; }
+        
+        .dispo-row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .dispo-row select, .dispo-row input { flex: 1; min-width: 100px; }
+        .add-dispo { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .add-dispo:hover { transform: scale(1.05); background: #218838; }
+        .remove-dispo { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .remove-dispo:hover { transform: scale(1.05); background: #c82333; }
+        .remove-competence { background: none; border: none; cursor: pointer; margin-left: 5px; font-size: 12px; color: inherit; opacity: 0.7; }
+        .remove-competence:hover { opacity: 1; }
+        
+        .view-mode { display: block; }
+        .edit-mode { display: none; }
+        
+        .alert { padding: 12px; border-radius: 10px; margin-bottom: 20px; }
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-error { background: #f8d7da; color: #721c24; }
+        
+        .button-group { display: flex; gap: 15px; margin-top: 20px; }
+        
+        .loading { text-align: center; padding: 60px; color: #667eea; }
+        
+        @media (max-width: 768px) {
+            .info-grid { grid-template-columns: 1fr; }
+            .header { padding: 30px; }
+            .content { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">🏫 IFRI_MentorLink</div>
+        <div class="nav-links">
+            <a href="./dashboard.html">Tableau de bord</a>
+            <a href="./offres_demandes.html">Offres/Demandes</a>
+            <a href="./matching.html">Matching</a>
+            <a href="./profil.html" class="active">Mon profil</a>
+            <a href="./messages.html">Messages</a>
+            <a href="#" onclick="confirmLogout()">Déconnexion</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="profile-card" id="profileCard">
+            <div class="loading">⏳ Chargement du profil...</div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let userId = null;
+        let allCompetences = [];
+        let allFilieres = [];
+        
+        async function loadProfile() {
+            const token = localStorage.getItem('token');
+            if (!token) { window.location.href = './login.html'; return; }
+            
+            try {
+                const verifyRes = await fetch('http://localhost:5000/api/auth/verify', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const verifyData = await verifyRes.json();
+                if (!verifyData.valid) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login.html';
+                    return;
+                }
+                userId = verifyData.user_id;
+                
+                const [userRes, fortsRes, lacunesRes, disposRes, filieresRes, competencesRes] = await Promise.all([
+                    fetch(`http://localhost:5000/api/user/${userId}`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch('http://localhost:5000/api/user/competences/fort', { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch('http://localhost:5000/api/user/competences/faible', { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch('http://localhost:5000/api/user/disponibilites', { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch('http://localhost:5000/api/filieres'),
+                    fetch('http://localhost:5000/api/competences')
+                ]);
+                
+                currentUser = await userRes.json();
+                const forts = await fortsRes.json();
+                const lacunes = await lacunesRes.json();
+                const dispos = await disposRes.json();
+                allFilieres = await filieresRes.json();
+                allCompetences = await competencesRes.json();
+                
+                renderViewMode(currentUser, forts, lacunes, dispos);
+            } catch (error) {
+                console.error('Erreur:', error);
+                document.getElementById('profileCard').innerHTML = `<div class="loading" style="color:#dc3545;">❌ Erreur: ${error.message}</div>`;
+            }
+        }
+        
+        function renderViewMode(user, forts, lacunes, dispos) {
+            const filiere = allFilieres.find(f => f.id_filiere === user.id_filiere);
+            const avatarHtml = user.photo_profil ? `<img src="${user.photo_profil}" onerror="this.src=''">` : '<span>👤</span>';
+            const date = new Date(user.date_inscription).toLocaleDateString('fr-FR');
+            
+            const html = `
+                <div id="viewMode" class="view-mode">
+                    <div class="header">
+                        <div class="avatar">${avatarHtml}</div>
+                        <div class="name">${user.prenom} ${user.nom}</div>
+                        <div class="email">${user.email}</div>
+                    </div>
+                    <div class="content">
+                        <div class="section">
+                            <h3>📋 Informations personnelles</h3>
+                            <div class="info-grid">
+                                <div class="info-item"><div class="info-icon">📱</div><div><div class="info-label">Téléphone</div><div class="info-value">${user.telephone || 'Non renseigné'}</div></div></div>
+                                <div class="info-item"><div class="info-icon">📚</div><div><div class="info-label">Niveau</div><div class="info-value">${user.niveau_etudes || 'Non renseigné'}</div></div></div>
+                                <div class="info-item"><div class="info-icon">🏫</div><div><div class="info-label">Filière</div><div class="info-value">${filiere ? filiere.libelle : 'Non renseignée'}</div></div></div>
+                                <div class="info-item"><div class="info-icon">📅</div><div><div class="info-label">Membre depuis</div><div class="info-value">${date}</div></div></div>
+                            </div>
+                        </div>
+                        
+                        <div class="section">
+                            <h3>⭐ Points forts</h3>
+                            <div class="competence-list">${forts.length ? forts.map(c => `<span class="badge badge-fort">${c.nom_competence}</span>`).join('') : 'Aucun'}</div>
+                            <h3 style="margin-top:15px;">📚 Lacunes</h3>
+                            <div class="competence-list">${lacunes.length ? lacunes.map(c => `<span class="badge badge-faible">${c.nom_competence}</span>`).join('') : 'Aucune'}</div>
+                        </div>
+                        
+                        <div class="section">
+                            <h3>⏰ Disponibilités</h3>
+                            <div class="dispo-list">${dispos.length ? dispos.map(d => `<span class="dispo-tag">📅 ${d.jour_semaine} ${d.heure_debut} - ${d.heure_fin}</span>`).join('') : 'Aucune'}</div>
+                        </div>
+                        
+                        <div class="section">
+                            <h3>📝 Bio</h3>
+                            <div>${user.bio || 'Aucune information'}</div>
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="toggleEditMode(true)">✏️ Modifier mon profil</button>
+                    </div>
+                </div>
+                
+                <div id="editMode" class="edit-mode">
+                    <div class="header">
+                        <div class="avatar">${avatarHtml}</div>
+                        <div class="name">Modifier mon profil</div>
+                    </div>
+                    <div class="content">
+                        <div id="editAlert"></div>
+                        <form id="profilForm">
+                            <div class="form-group">
+                                <label>📸 Photo (URL)</label>
+                                <input type="text" id="photoProfil" value="${user.photo_profil || ''}" placeholder="https://exemple.com/photo.jpg">
+                            </div>
+                            <div class="form-group">
+                                <label>👤 Nom</label>
+                                <input type="text" id="nom" value="${user.nom || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>👤 Prénom</label>
+                                <input type="text" id="prenom" value="${user.prenom || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>📱 Téléphone</label>
+                                <input type="tel" id="telephone" value="${user.telephone || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>📚 Niveau</label>
+                                <select id="niveauEtudes">
+                                    <option value="L1" ${user.niveau_etudes === 'L1' ? 'selected' : ''}>L1</option>
+                                    <option value="L2" ${user.niveau_etudes === 'L2' ? 'selected' : ''}>L2</option>
+                                    <option value="L3" ${user.niveau_etudes === 'L3' ? 'selected' : ''}>L3</option>
+                                    <option value="M1" ${user.niveau_etudes === 'M1' ? 'selected' : ''}>M1</option>
+                                    <option value="M2" ${user.niveau_etudes === 'M2' ? 'selected' : ''}>M2</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>🏫 Filière</label>
+                                <select id="filiere" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>📝 Bio</label>
+                                <textarea id="bio">${user.bio || ''}</textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>⭐ Points forts</label>
+                                <div id="editForts" class="competence-list"></div>
+                                <select id="newFortSelect" style="width:auto;display:inline-block;margin-right:10px;"></select>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="addCompetence('fort')">+ Ajouter</button>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>📚 Lacunes</label>
+                                <div id="editFaibles" class="competence-list"></div>
+                                <select id="newFaibleSelect" style="width:auto;display:inline-block;margin-right:10px;"></select>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="addCompetence('faible')">+ Ajouter</button>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>⏰ Disponibilités</label>
+                                <div id="disposContainer"></div>
+                                <button type="button" class="add-dispo" onclick="addDispoRow()">+ Ajouter une disponibilité</button>
+                            </div>
+                            
+                            <div class="button-group">
+                                <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+                                <button type="button" class="btn btn-secondary" onclick="toggleEditMode(false)">❌ Annuler</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('profileCard').innerHTML = html;
+            
+            const selectFiliere = document.getElementById('filiere');
+            if (selectFiliere) {
+                allFilieres.forEach(f => {
+                    const opt = document.createElement('option');
+                    opt.value = f.id_filiere;
+                    opt.textContent = `${f.code_filiere} - ${f.libelle}`;
+                    if (currentUser.id_filiere === f.id_filiere) opt.selected = true;
+                    selectFiliere.appendChild(opt);
+                });
+            }
+            
+            const editForts = document.getElementById('editForts');
+            const editFaibles = document.getElementById('editFaibles');
+            if (editForts) {
+                editForts.innerHTML = forts.map(c => `
+                    <span class="badge badge-fort">
+                        ${c.nom_competence}
+                        <button type="button" class="remove-competence" onclick="removeCompetence(${c.id_competence}, 'fort')">✖</button>
+                    </span>
+                `).join('');
+                editFaibles.innerHTML = lacunes.map(c => `
+                    <span class="badge badge-faible">
+                        ${c.nom_competence}
+                        <button type="button" class="remove-competence" onclick="removeCompetence(${c.id_competence}, 'faible')">✖</button>
+                    </span>
+                `).join('');
+            }
+            
+            const existingForts = new Set(forts.map(c => c.id_competence));
+            const existingFaibles = new Set(lacunes.map(c => c.id_competence));
+            
+            const fortSelect = document.getElementById('newFortSelect');
+            const faibleSelect = document.getElementById('newFaibleSelect');
+            if (fortSelect) {
+                fortSelect.innerHTML = '<option value="">Choisir...</option>';
+                faibleSelect.innerHTML = '<option value="">Choisir...</option>';
+                allCompetences.forEach(c => {
+                    if (!existingForts.has(c.id_competence)) {
+                        const opt = document.createElement('option');
+                        opt.value = c.id_competence;
+                        opt.textContent = c.nom;
+                        fortSelect.appendChild(opt);
+                    }
+                    if (!existingFaibles.has(c.id_competence)) {
+                        const opt = document.createElement('option');
+                        opt.value = c.id_competence;
+                        opt.textContent = c.nom;
+                        faibleSelect.appendChild(opt);
+                    }
+                });
+            }
+            
+            const disposContainer = document.getElementById('disposContainer');
+            if (disposContainer) {
+                if (dispos.length) {
+                    dispos.forEach(d => addDispoRow(d.jour_semaine, d.heure_debut, d.heure_fin));
+                } else {
+                    addDispoRow();
+                }
+            }
+        }
+        
+        function addDispoRow(jour = 'Lundi', debut = '09:00', fin = '17:00') {
+            const container = document.getElementById('disposContainer');
+            const div = document.createElement('div');
+            div.className = 'dispo-row';
+            div.innerHTML = `
+                <select class="dispo-jour">
+                    <option>Lundi</option><option>Mardi</option><option>Mercredi</option>
+                    <option>Jeudi</option><option>Vendredi</option><option>Samedi</option><option>Dimanche</option>
+                </select>
+                <input type="time" class="dispo-debut" value="${debut}">
+                <input type="time" class="dispo-fin" value="${fin}">
+                <button type="button" class="remove-dispo" onclick="this.parentElement.remove()">✖</button>
+            `;
+            div.querySelector('.dispo-jour').value = jour;
+            container.appendChild(div);
+        }
+        
+        function getDispos() {
+            const dispos = [];
+            document.querySelectorAll('#disposContainer .dispo-row').forEach(row => {
+                dispos.push({
+                    jour: row.querySelector('.dispo-jour').value,
+                    heure_debut: row.querySelector('.dispo-debut').value,
+                    heure_fin: row.querySelector('.dispo-fin').value
+                });
+            });
+            return dispos;
+        }
+        
+        async function addCompetence(type) {
+            const selectId = type === 'fort' ? 'newFortSelect' : 'newFaibleSelect';
+            const select = document.getElementById(selectId);
+            const competenceId = select.value;
+            if (!competenceId) { alert('Choisissez une compétence'); return; }
+            
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:5000/api/user/competences', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ id_competence: parseInt(competenceId), type_maitrise: type })
+            });
+            
+            if (response.ok) {
+                await loadProfile();
+                toggleEditMode(true);
+            } else {
+                const error = await response.json();
+                document.getElementById('editAlert').innerHTML = `<div class="alert alert-error">❌ ${error.error}</div>`;
+            }
+        }
+        
+        async function removeCompetence(competenceId, type) {
+            if (!confirm('Supprimer cette compétence ?')) return;
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:5000/api/user/competences/${competenceId}/${type}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.ok) {
+                await loadProfile();
+                toggleEditMode(true);
+            } else {
+                alert('Erreur lors de la suppression');
+            }
+        }
+        
+        document.addEventListener('submit', async (e) => {
+            if (e.target && e.target.id === 'profilForm') {
+                e.preventDefault();
+                const token = localStorage.getItem('token');
+                const data = {
+                    nom: document.getElementById('nom').value,
+                    prenom: document.getElementById('prenom').value,
+                    telephone: document.getElementById('telephone').value,
+                    niveau_etudes: document.getElementById('niveauEtudes').value,
+                    id_filiere: parseInt(document.getElementById('filiere').value),
+                    bio: document.getElementById('bio').value,
+                    photo_profil: document.getElementById('photoProfil').value
+                };
+                
+                try {
+                    const response = await fetch('http://localhost:5000/api/user/update', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify(data)
+                    });
+                    if (response.ok) {
+                        await fetch('http://localhost:5000/api/user/disponibilites/clear', {
+                            method: 'DELETE',
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        const dispos = getDispos();
+                        for (const dispo of dispos) {
+                            await fetch('http://localhost:5000/api/user/disponibilites', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                body: JSON.stringify(dispo)
+                            });
+                        }
+                        document.getElementById('editAlert').innerHTML = '<div class="alert alert-success">✅ Profil mis à jour !</div>';
+                        setTimeout(() => { toggleEditMode(false); loadProfile(); }, 1500);
+                    } else {
+                        const error = await response.json();
+                        document.getElementById('editAlert').innerHTML = `<div class="alert alert-error">❌ ${error.error}</div>`;
+                    }
+                } catch (error) {
+                    document.getElementById('editAlert').innerHTML = '<div class="alert alert-error">❌ Erreur lors de la mise à jour</div>';
+                }
+            }
+        });
+        
+        function toggleEditMode(isEdit) {
+            const viewMode = document.getElementById('viewMode');
+            const editMode = document.getElementById('editMode');
+            if (viewMode) viewMode.style.display = isEdit ? 'none' : 'block';
+            if (editMode) editMode.style.display = isEdit ? 'block' : 'none';
+        }
+        
+        function confirmLogout() {
+            if (confirm('Êtes-vous sûr(e) de vouloir vous déconnecter ?')) {
+                localStorage.removeItem('token');
+                window.location.href = './login.html';
+            }
+        }
+        
+        loadProfile();
+    </script>
+</body>
+</html>
