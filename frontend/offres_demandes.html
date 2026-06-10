@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offres et Demandes - IFRI_MentorLink</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .navbar { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 20px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .nav-links a { color: #555; text-decoration: none; margin-left: 25px; padding: 8px 15px; border-radius: 8px; transition: all 0.3s; }
+        .nav-links a:hover, .nav-links a.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .card { background: white; border-radius: 25px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: transform 0.3s; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; color: #555; }
+        input, select, textarea { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; }
+        .btn { padding: 12px 20px; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 100%; }
+        .badge-mentor { background: #667eea; color: white; padding: 2px 8px; border-radius: 20px; font-size: 11px; margin-left: 10px; }
+        .badge-mentore { background: #28a745; color: white; padding: 2px 8px; border-radius: 20px; font-size: 11px; margin-left: 10px; }
+        .liste-item { border-bottom: 1px solid #eee; padding: 15px 0; }
+        .statut { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; margin-top: 10px; background: #d4edda; color: #155724; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">🏫 IFRI_MentorLink</div>
+        <div class="nav-links">
+            <a href="./dashboard.html">Tableau de bord</a>
+            <a href="./offres_demandes.html" class="active">Offres/Demandes</a>
+            <a href="./matching.html">Matching</a>
+            <a href="./profil.html">Mon profil</a>
+            <a href="./messages.html">Messages</a>
+            <a href="#" onclick="confirmLogout()">Déconnexion</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="grid-2">
+            <div class="card">
+                <h2>📢 Publier une offre <span class="badge-mentor">Mentor</span></h2>
+                <form id="offreForm">
+                    <div class="form-group">
+                        <label>Titre</label>
+                        <input type="text" id="offreTitre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Compétence</label>
+                        <select id="offreCompetence" required><option value="">Choisir...</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="offreDescription"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Format</label>
+                        <select id="offreFormat">
+                            <option value="presentiel">Présentiel</option>
+                            <option value="en_ligne">En ligne</option>
+                            <option value="les_deux">Les deux</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Publier l'offre</button>
+                </form>
+                <h3 style="margin: 25px 0 15px 0;">📋 Mes offres</h3>
+                <div id="mesOffres"><p style="color:#999;">Aucune offre</p></div>
+            </div>
+
+            <div class="card">
+                <h2>🙏 Publier une demande <span class="badge-mentore">Mentoré</span></h2>
+                <form id="demandeForm">
+                    <div class="form-group">
+                        <label>Titre</label>
+                        <input type="text" id="demandeTitre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Compétence</label>
+                        <select id="demandeCompetence" required><option value="">Choisir...</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="demandeDescription"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Format</label>
+                        <select id="demandeFormat">
+                            <option value="presentiel">Présentiel</option>
+                            <option value="en_ligne">En ligne</option>
+                            <option value="les_deux">Les deux</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Publier la demande</button>
+                </form>
+                <h3 style="margin: 25px 0 15px 0;">📋 Mes demandes</h3>
+                <div id="mesDemandes"><p style="color:#999;">Aucune demande</p></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000';
+
+        async function loadCompetences() {
+            const token = localStorage.getItem('token');
+            const [fortsResp, lacunesResp] = await Promise.all([
+                fetch(`${API_URL}/api/user/competences/fort`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch(`${API_URL}/api/user/competences/faible`, { headers: { 'Authorization': `Bearer ${token}` } })
+            ]);
+            const forts = await fortsResp.json();
+            const lacunes = await lacunesResp.json();
+            
+            const fillSelect = (id, data, textKey) => {
+                const el = document.getElementById(id);
+                data.forEach(c => el.innerHTML += `<option value="${c.id_competence}">${c[textKey]}</option>`);
+            };
+            fillSelect('offreCompetence', forts, 'nom_competence');
+            fillSelect('demandeCompetence', lacunes, 'nom_competence');
+        }
+
+        document.getElementById('offreForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                titre: document.getElementById('offreTitre').value,
+                competences: [parseInt(document.getElementById('offreCompetence').value)],
+                description: document.getElementById('offreDescription').value,
+                format_session: document.getElementById('offreFormat').value,
+                disponibilites: []
+            };
+            const response = await fetch(`${API_URL}/api/offres/publier`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) { alert('Publié !'); location.reload(); }
+        });
+
+        document.getElementById('demandeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                titre: document.getElementById('demandeTitre').value,
+                competences: [parseInt(document.getElementById('demandeCompetence').value)],
+                description: document.getElementById('demandeDescription').value,
+                format_session: document.getElementById('demandeFormat').value,
+                disponibilites: []
+            };
+            const response = await fetch(`${API_URL}/api/demandes/publier`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) { alert('Publié !'); location.reload(); }
+        });
+
+        function confirmLogout() { localStorage.removeItem('token'); window.location.href = './login.html'; }
+        loadCompetences();
+    </script>
+</body>
+</html>
