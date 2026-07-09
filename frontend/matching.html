@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matching - IFRI_MentorLink</title>
+    <script src="./js/i18n.js" defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -156,33 +157,33 @@
     <div class="navbar">
         <div class="logo">🏫 IFRI_MentorLink</div>
         <div class="nav-links">
-            <a href="./dashboard.html">Tableau de bord</a>
-            <a href="./offres_demandes.html">Offres/Demandes</a>
-            <a href="./matching.html" class="active">Matching</a>
-            <a href="./profil.html">Mon profil</a>
-            <a href="./messages.html">Messages</a>
-            <a href="#" onclick="confirmLogout()">Déconnexion</a>
+            <a href="./dashboard.html" data-i18n="nav_dashboard">Tableau de bord</a>
+            <a href="./offres_demandes.html" data-i18n="nav_offres">Offres/Demandes</a>
+            <a href="./matching.html" class="active" data-i18n="nav_matching">Matching</a>
+            <a href="./profil.html" data-i18n="nav_profil">Mon profil</a>
+            <a href="./messages.html" data-i18n="nav_messages">Messages</a>
+            <a href="#" onclick="confirmLogout()" data-i18n="nav_logout">Déconnexion</a>
         </div>
     </div>
 
     <div class="container">
         <div class="card">
-            <h2>🔍 Suggestions de mentorat</h2>
-            <div id="matchesContainer" class="loading">Chargement des matches...</div>
-            <button id="generateBtn" class="btn-primary" onclick="generateMatches()">🔄 Générer de nouveaux matches</button>
+            <h2 data-i18n="matching_title">🔍 Suggestions de mentorat</h2>
+            <div id="matchesContainer" class="loading" data-i18n="loading_matches">Chargement des matches...</div>
+            <button id="generateBtn" class="btn-primary" onclick="generateMatches()" data-i18n="generate_matches_btn">🔄 Générer de nouveaux matches</button>
         </div>
     </div>
 
     <script>
         let currentUser = null;
         let currentUserId = null;
-        const API_BASE = '';  // Utilise le même domaine que la page
+        const API_BASE = window.location.origin;
         
         async function checkAuth() {
             const token = localStorage.getItem('token');
             if (!token) { window.location.href = '/login.html'; return false; }
             try {
-                const response = await fetch('http://localhost:5000/api/auth/verify', {
+                const response = await fetch(`${API_BASE}/api/auth/verify`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await response.json();
@@ -203,7 +204,7 @@
             container.innerHTML = '<div class="loading">⏳ Chargement des matches...</div>';
             
             try {
-                const response = await fetch('http://localhost:5000/api/matching/my-matches', {
+                const response = await fetch(`${API_BASE}/api/matching/my-matches`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
@@ -218,10 +219,10 @@
                 
                 let html = '';
                 for (const match of matches) {
-                    const competencesRes = await fetch(`http://localhost:5000/api/matching/common-competences/${match.id_autre}`, {
+                    const competencesRes = await fetch(`${API_BASE}/api/matching/common-competences/${match.id_autre}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
-                    const disposRes = await fetch(`http://localhost:5000/api/matching/common-disponibilites/${match.id_autre}`, {
+                    const disposRes = await fetch(`${API_BASE}/api/matching/common-disponibilites/${match.id_autre}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     
@@ -300,7 +301,7 @@
             btn.disabled = true;
             
             try {
-                const response = await fetch('http://localhost:5000/api/matching/generate', {
+                const response = await fetch(`${API_BASE}/api/matching/generate`, {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -322,7 +323,7 @@
         async function contactUser(userId) {
             const token = localStorage.getItem('token');
             try {
-                const response = await fetch(`http://localhost:5000/api/conversations/${userId}`, {
+                const response = await fetch(`${API_BASE}/api/conversations/${userId}`, {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });

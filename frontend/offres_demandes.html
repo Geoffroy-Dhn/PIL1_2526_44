@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Offres et Demandes - IFRI_MentorLink</title>
+    <script src="./js/i18n.js" defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
@@ -29,79 +30,79 @@
     <div class="navbar">
         <div class="logo">🏫 IFRI_MentorLink</div>
         <div class="nav-links">
-            <a href="./dashboard.html">Tableau de bord</a>
-            <a href="./offres_demandes.html" class="active">Offres/Demandes</a>
-            <a href="./matching.html">Matching</a>
-            <a href="./profil.html">Mon profil</a>
-            <a href="./messages.html">Messages</a>
-            <a href="#" onclick="confirmLogout()">Déconnexion</a>
+            <a href="./dashboard.html" data-i18n="nav_dashboard">Tableau de bord</a>
+            <a href="./offres_demandes.html" class="active" data-i18n="nav_offres">Offres/Demandes</a>
+            <a href="./matching.html" data-i18n="nav_matching">Matching</a>
+            <a href="./profil.html" data-i18n="nav_profil">Mon profil</a>
+            <a href="./messages.html" data-i18n="nav_messages">Messages</a>
+            <a href="#" onclick="confirmLogout()" data-i18n="nav_logout">Déconnexion</a>
         </div>
     </div>
 
     <div class="container">
         <div class="grid-2">
             <div class="card">
-                <h2>📢 Publier une offre <span class="badge-mentor">Mentor</span></h2>
+                <h2><span data-i18n="publish_offre_title">📢 Publier une offre</span> <span class="badge-mentor" data-i18n="role_mentor">Mentor</span></h2>
                 <form id="offreForm">
                     <div class="form-group">
-                        <label>Titre</label>
+                        <label data-i18n="label_title_field">Titre</label>
                         <input type="text" id="offreTitre" required>
                     </div>
                     <div class="form-group">
-                        <label>Compétence</label>
-                        <select id="offreCompetence" required><option value="">Choisir...</option></select>
+                        <label data-i18n="label_competence_field">Compétence</label>
+                        <select id="offreCompetence" required><option value="" data-i18n="choose_option">Choisir...</option></select>
                     </div>
                     <div class="form-group">
-                        <label>Description</label>
+                        <label data-i18n="label_description_field">Description</label>
                         <textarea id="offreDescription"></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Format</label>
+                        <label data-i18n="label_format_field">Format</label>
                         <select id="offreFormat">
-                            <option value="presentiel">Présentiel</option>
-                            <option value="en_ligne">En ligne</option>
-                            <option value="les_deux">Les deux</option>
+                            <option value="presentiel" data-i18n="format_presentiel">Présentiel</option>
+                            <option value="en_ligne" data-i18n="format_online">En ligne</option>
+                            <option value="les_deux" data-i18n="format_both">Les deux</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Publier l'offre</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="btn_publish_offre">Publier l'offre</button>
                 </form>
-                <h3 style="margin: 25px 0 15px 0;">📋 Mes offres</h3>
-                <div id="mesOffres"><p style="color:#999;">Aucune offre</p></div>
+                <h3 style="margin: 25px 0 15px 0;" data-i18n="my_offres_title">📋 Mes offres</h3>
+                <div id="mesOffres"><p style="color:#999;" data-i18n="no_offres">Aucune offre</p></div>
             </div>
 
             <div class="card">
-                <h2>🙏 Publier une demande <span class="badge-mentore">Mentoré</span></h2>
+                <h2><span data-i18n="publish_demande_title">🙏 Publier une demande</span> <span class="badge-mentore" data-i18n="role_mentore">Mentoré</span></h2>
                 <form id="demandeForm">
                     <div class="form-group">
-                        <label>Titre</label>
+                        <label data-i18n="label_title_field">Titre</label>
                         <input type="text" id="demandeTitre" required>
                     </div>
                     <div class="form-group">
-                        <label>Compétence</label>
-                        <select id="demandeCompetence" required><option value="">Choisir...</option></select>
+                        <label data-i18n="label_competence_field">Compétence</label>
+                        <select id="demandeCompetence" required><option value="" data-i18n="choose_option">Choisir...</option></select>
                     </div>
                     <div class="form-group">
-                        <label>Description</label>
+                        <label data-i18n="label_description_field">Description</label>
                         <textarea id="demandeDescription"></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Format</label>
+                        <label data-i18n="label_format_field">Format</label>
                         <select id="demandeFormat">
-                            <option value="presentiel">Présentiel</option>
-                            <option value="en_ligne">En ligne</option>
-                            <option value="les_deux">Les deux</option>
+                            <option value="presentiel" data-i18n="format_presentiel">Présentiel</option>
+                            <option value="en_ligne" data-i18n="format_online">En ligne</option>
+                            <option value="les_deux" data-i18n="format_both">Les deux</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Publier la demande</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="btn_publish_demande">Publier la demande</button>
                 </form>
-                <h3 style="margin: 25px 0 15px 0;">📋 Mes demandes</h3>
-                <div id="mesDemandes"><p style="color:#999;">Aucune demande</p></div>
+                <h3 style="margin: 25px 0 15px 0;" data-i18n="my_demandes_title">📋 Mes demandes</h3>
+                <div id="mesDemandes"><p style="color:#999;" data-i18n="no_demandes">Aucune demande</p></div>
             </div>
         </div>
     </div>
 
     <script>
-        const API_URL = 'http://localhost:5000';
+        const API_URL = window.location.origin;
 
         async function loadCompetences() {
             const token = localStorage.getItem('token');

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Profil - IFRI_MentorLink</title>
+    <script src="./js/i18n.js" defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -249,18 +250,18 @@
     <div class="navbar">
         <div class="logo">🏫 IFRI_MentorLink</div>
         <div class="nav-links">
-            <a href="./dashboard.html">Tableau de bord</a>
-            <a href="./offres_demandes.html">Offres/Demandes</a>
-            <a href="./matching.html">Matching</a>
-            <a href="./profil.html" class="active">Mon profil</a>
-            <a href="./messages.html">Messages</a>
-            <a href="#" onclick="confirmLogout()">Déconnexion</a>
+            <a href="./dashboard.html" data-i18n="nav_dashboard">Tableau de bord</a>
+            <a href="./offres_demandes.html" data-i18n="nav_offres">Offres/Demandes</a>
+            <a href="./matching.html" data-i18n="nav_matching">Matching</a>
+            <a href="./profil.html" class="active" data-i18n="nav_profil">Mon profil</a>
+            <a href="./messages.html" data-i18n="nav_messages">Messages</a>
+            <a href="#" onclick="confirmLogout()" data-i18n="nav_logout">Déconnexion</a>
         </div>
     </div>
 
     <div class="container">
         <div class="profile-card" id="profileCard">
-            <div class="loading">⏳ Chargement du profil...</div>
+            <div class="loading" data-i18n="loading_profile">⏳ Chargement du profil...</div>
         </div>
     </div>
 
@@ -270,12 +271,14 @@
         let allCompetences = [];
         let allFilieres = [];
         
+        const API_BASE = window.location.origin;
+
         async function loadProfile() {
             const token = localStorage.getItem('token');
             if (!token) { window.location.href = './login.html'; return; }
             
             try {
-                const verifyRes = await fetch('http://localhost:5000/api/auth/verify', {
+                const verifyRes = await fetch(`${API_BASE}/api/auth/verify`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const verifyData = await verifyRes.json();
@@ -287,12 +290,12 @@
                 userId = verifyData.user_id;
                 
                 const [userRes, fortsRes, lacunesRes, disposRes, filieresRes, competencesRes] = await Promise.all([
-                    fetch(`http://localhost:5000/api/user/${userId}`, { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch('http://localhost:5000/api/user/competences/fort', { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch('http://localhost:5000/api/user/competences/faible', { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch('http://localhost:5000/api/user/disponibilites', { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch('http://localhost:5000/api/filieres'),
-                    fetch('http://localhost:5000/api/competences')
+                    fetch(`${API_BASE}/api/user/${userId}`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_BASE}/api/user/competences/fort`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_BASE}/api/user/competences/faible`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_BASE}/api/user/disponibilites`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_BASE}/api/filieres`),
+                    fetch(`${API_BASE}/api/competences`)
                 ]);
                 
                 currentUser = await userRes.json();
@@ -525,7 +528,7 @@
             if (!competenceId) { alert('Choisissez une compétence'); return; }
             
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/user/competences', {
+            const response = await fetch(`${API_BASE}/api/user/competences`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ id_competence: parseInt(competenceId), type_maitrise: type })
@@ -543,7 +546,7 @@
         async function removeCompetence(competenceId, type) {
             if (!confirm('Supprimer cette compétence ?')) return;
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/user/competences/${competenceId}/${type}`, {
+            const response = await fetch(`${API_BASE}/api/user/competences/${competenceId}/${type}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -570,19 +573,19 @@
                 };
                 
                 try {
-                    const response = await fetch('http://localhost:5000/api/user/update', {
+                    const response = await fetch(`${API_BASE}/api/user/update`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify(data)
                     });
                     if (response.ok) {
-                        await fetch('http://localhost:5000/api/user/disponibilites/clear', {
+                        await fetch(`${API_BASE}/api/user/disponibilites/clear`, {
                             method: 'DELETE',
                             headers: { 'Authorization': `Bearer ${token}` }
                         });
                         const dispos = getDispos();
                         for (const dispo of dispos) {
-                            await fetch('http://localhost:5000/api/user/disponibilites', {
+                            await fetch(`${API_BASE}/api/user/disponibilites`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                                 body: JSON.stringify(dispo)

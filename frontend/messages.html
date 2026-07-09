@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messagerie - IFRI_MentorLink</title>
+    <script src="./js/i18n.js" defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -182,12 +183,12 @@
     <div class="navbar">
         <div class="logo">🏫 IFRI_MentorLink</div>
         <div class="nav-links">
-            <a href="./dashboard.html">Tableau de bord</a>
-            <a href="./offres_demandes.html">Offres/Demandes</a>
-            <a href="./matching.html">Matching</a>
-            <a href="./profil.html">Mon profil</a>
-            <a href="./messages.html" class="active">Messages</a>
-            <a href="#" onclick="confirmLogout()">Déconnexion</a>
+            <a href="./dashboard.html" data-i18n="nav_dashboard">Tableau de bord</a>
+            <a href="./offres_demandes.html" data-i18n="nav_offres">Offres/Demandes</a>
+            <a href="./matching.html" data-i18n="nav_matching">Matching</a>
+            <a href="./profil.html" data-i18n="nav_profil">Mon profil</a>
+            <a href="./messages.html" class="active" data-i18n="nav_messages">Messages</a>
+            <a href="#" onclick="confirmLogout()" data-i18n="nav_logout">Déconnexion</a>
         </div>
     </div>
 
@@ -195,15 +196,15 @@
         <div class="messaging-container">
             <div class="conversations-sidebar">
                 <div class="sidebar-header">
-                    <h3>💬 Conversations</h3>
-                    <button class="refresh-btn" onclick="loadConversations()">🔄 Actualiser</button>
+                    <h3 data-i18n="conversations_title">💬 Conversations</h3>
+                    <button class="refresh-btn" onclick="loadConversations()" data-i18n="btn_refresh">🔄 Actualiser</button>
                 </div>
                 <div class="conversations-list" id="conversationsList">
-                    <div class="no-conversations">Chargement...</div>
+                    <div class="no-conversations" data-i18n="no_conversations">Chargement...</div>
                 </div>
             </div>
             <div class="chat-area" id="chatArea">
-                <div class="empty-chat">🤝 Sélectionnez une conversation</div>
+                <div class="empty-chat" data-i18n="select_conv_placeholder">🤝 Sélectionnez une conversation</div>
             </div>
         </div>
     </div>
@@ -213,11 +214,13 @@
         let currentConvId = null;
         let refreshInterval = null;
         
+        const API_BASE = window.location.origin;
+
         async function loadUser() {
             const token = localStorage.getItem('token');
             if (!token) { window.location.href = './login.html'; return; }
             try {
-                const response = await fetch('http://localhost:5000/api/auth/verify', {
+                const response = await fetch(`${API_BASE}/api/auth/verify`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await response.json();
@@ -238,7 +241,7 @@
         async function loadConversations() {
             const token = localStorage.getItem('token');
             try {
-                const response = await fetch('http://localhost:5000/api/conversations', {
+                const response = await fetch(`${API_BASE}/api/conversations`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (!response.ok) throw new Error('Erreur');
@@ -269,7 +272,7 @@
             currentConvId = convId;
             loadConversations();
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/messages/${convId}`, {
+            const response = await fetch(`${API_BASE}/api/messages/${convId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const messages = await response.json();
@@ -305,7 +308,7 @@
             const contenu = input.value.trim();
             if (!contenu || !currentConvId) return;
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/messages', {
+            const response = await fetch(`${API_BASE}/api/messages`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ conversation_id: currentConvId, contenu })
@@ -321,7 +324,7 @@
         
         async function loadMessages(convId) {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/messages/${convId}`, {
+            const response = await fetch(`${API_BASE}/api/messages/${convId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const messages = await response.json();
